@@ -74,5 +74,33 @@ router.delete('/:id', (req, res) => {
         });
 });
 
+router.post('/', (req, res) => {
+    if (req.body.name && typeof req.body.budget === 'number' && req.body.budget >= 0) {
+        db('accounts')
+            .insert(req.body)
+            .then(([id]) => id)
+            .then(id => {
+                db('accounts')
+                    .where({ id })
+                    .first()
+                    .then(results => {
+                        res
+                            .status(201)
+                            .json(results)
+                    });
+            })
+            .catch(() => {
+                res
+                    .status(500)
+                    .json({ message: "Couldn't add the account" })
+            })
+    } else {
+        res
+            .status(400)
+            .json({
+                message: "Please provide name and budget of zero or more for the account"
+            })
+    }
+})
 
 module.exports = router
