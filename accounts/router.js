@@ -57,4 +57,22 @@ router.put('/:id', (req, res) => {
         })
 })
 
+router.delete('/:id', (req, res) => {
+    const userId = req.params.id
+    // console.log(userId)
+    db('accounts')
+        .where({ id: userId })
+        .del()
+        .then(results => {
+            res
+                .json({ message: `${results} record(s) deleted` })
+        })
+        .catch(() => {
+            res
+                .status(500)
+                .json({ message: 'Could not remove the account' })
+        });
+});
+
+
 module.exports = router
