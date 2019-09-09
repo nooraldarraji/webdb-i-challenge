@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const userId = req.params.id
-    console.log(userId)
+    // console.log(userId)
     db('accounts')
         .where({ id: userId })
         .first()
@@ -31,6 +31,29 @@ router.get('/:id', (req, res) => {
                     .status(404)
                     .json({ message: 'Unable to find the account' })
             }
+        })
+})
+
+router.put('/:id', (req, res) => {
+    const userId = req.params.id
+    // console.log(userId)
+    db('accounts')
+        .where({ id: userId })
+        .update(req.body)
+        .then(results => {
+            if (results) {
+                res
+                    .json({ message: `${results} record(s) updated` })
+            } else {
+                res
+                    .status(404)
+                    .json({ message: 'Account not found' })
+            }
+        })
+        .catch(() => {
+            res
+                .status(500)
+                .json({ message: 'Could not update the account' })
         })
 })
 
